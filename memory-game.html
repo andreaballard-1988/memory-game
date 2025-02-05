@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewpoint" content="width=device-width, initial-scale=1.0">
+        <title>Memory Game</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                margin: 0;
+                background-color: lightsalmon;
+            }
+           
+        #gameBoard {
+                display: grid;
+                grid-template-columns: repeat(4, 100px);
+                grid-gap: 10px;
+            }
+            .card {
+                width: 100px;
+                height: 100px;
+                background-color: black;
+                color: white;
+                font-size: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                border-radius: 8px;
+            }
+            .card.flipped {
+                background-color: lightgreen;
+                color: black;
+                cursor: default;
+            }
+            .card.matched {
+                background-color: lightgreen;
+                opacity: 0.5;
+                color: black;
+            }
+        </style>
+    </head>
+<body>
+        <div id="gameBoard"></div>
+        <script>
+        function shuffle(array){
+            for (let i = array.length - 1; 1 > 0; i--){
+                const j = Math.floor(Math.random() * (i +1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        const gameBoard = document.getElementById("gameBoard");
+        const icon = ['😊','😂','🤣','😘','😒','😍','❤️','😁'];
+        const cards = [...icons, ...icons];
+
+        shuffle(cards);
+
+        cards.forEach(icon => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.icon = icon;
+            card.innerText = '?'
+            gameBoard.appendChild(card);
+        })
+    
+        let firstCard = null;
+        let secondCard = null;
+        let lockBoard = false;
+
+        function resetTurn() {
+            [firstCard, secondCard] = [null, null];
+            lockBoard = false;
+        }
+        
+        function flipCard(card) {
+            if(lockBoard){
+                return;
+            }
+
+            if(card === firstCard) {
+                return;
+            }
+
+            if(card.classList.contains('matched')) {
+                return;
+            }
+
+            card.classList.add('flipped');
+            card.innerText = card.dataset.icon;
+            
+            if(firstCard == null) {
+                firstCard = card;
+            } else {
+                secondCard = card;
+                checkMatch();
+            }
+        }
+
+        function checkMatch() {
+            if(firstCard.dataset.icon === secondCard.dataset.icon){
+                firstCard.classList.add('matched');
+                secondCard.classList.add('matched');
+                resetTurn();
+            } else {
+                lockBoard = true;
+                setTimeout(() => {
+                    firstCard.classList.remove('flipped');
+                    secondCard.classList.remove('flipped');
+                    firstCard.innerText = "?";
+                    secondCard.innerText = "?";
+                    resetTurn();
+               
+                }, 2000)
+            }
+        }
+
+        gameBoard.addEventListener('click', event =>{
+            if(event.target.classList.contains('card')){
+                flipCard(event.target);
+            }
+        });
+
+        </script>
+</body>
+</html>
