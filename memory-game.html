@@ -19,6 +19,7 @@
                 display: grid;
                 grid-template-columns: repeat(4, 100px);
                 grid-gap: 10px;
+                margin-top: 100px;
             }
             .card {
                 width: 100px;
@@ -45,10 +46,11 @@
         </style>
     </head>
 <body>
+    <h1>My<br> Memory<br> Game</h1>
         <div id="gameBoard"></div>
     <script>
         function shuffle(array){
-            for (let i = array.length - 1; 1 > 0; i--){
+            for (let i = array.length - 1; i > 0; i--){
                 const j = Math.floor(Math.random() * (i +1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
